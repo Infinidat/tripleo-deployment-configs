@@ -1,0 +1,27 @@
+parameter_defaults:
+  CinderEnableIscsiBackend: false
+  CinderEnableRbdBackend: false
+  CinderEnableNfsBackend: false
+  NovaEnableRbdBackend: false
+
+  ControllerExtraConfig:
+    cinder::config::cinder_config:
+        infinidat-openstack-cert/volume_driver:
+            value: cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+        infinidat-openstack-cert/volume_backend_name:
+            value: ibox607
+        infinidat-openstack-cert/san_ip:
+            value: 172.20.72.238
+        infinidat-openstack-cert/san_login:
+            value: admin
+        infinidat-openstack-cert/san_password:
+            value: 123456
+        infinidat-openstack-cert/san_thin_provision:
+            value: true
+        infinidat-openstack-cert/infinidat_pool_name:
+            value: openstack-cert
+        infinidat-openstack-cert/infinidat_storage_protocol:
+            value: iscsi
+        infinidat-openstack-cert/infinidat_iscsi_netspaces:
+            value: iSCSI
+    cinder_user_enabled_backends: ['infinidat-openstack-cert']
