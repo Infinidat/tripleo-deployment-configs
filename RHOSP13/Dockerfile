@@ -13,7 +13,6 @@ LABEL name="rhosp13/openstack-cinder-volume-infinidat-plugin" \
 USER root
 
 ###Adding package
-# Enable a repo to install a package
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python get-pip.py
 
