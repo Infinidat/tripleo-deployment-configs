@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir -U setuptools
 COPY driver-requirements.txt /
 RUN pip install -r driver-requirements.txt
 
+###fix infinidat cinder driver bug
+RUN sed -i -e 's/create_child/create_snapshot/g' /usr/lib/python2.7/site-packages/cinder/volume/drivers/infinidat.py
+
 # Add required license as text file in Liceses directory (GPL, MIT, APACHE, Partner End User Agreement, etc)
 RUN mkdir /licenses
 COPY licensing.txt /licenses
