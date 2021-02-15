@@ -78,9 +78,9 @@ create a *volume type*, which can be used to specify the back end you
 want to use (in this case the newly-defined backend). This is required
 in an OpenStack deployment where you have other backends enabled.
 
-To create a volume type name, run:
+To create a volume type with description, run:
 ```
-$ cinder type-create infinibox-cinder-pool
+$ cinder type-create --description Infinidat-iscsi infinibox-cinder-pool
 ```
 Now, associate that new volume type with one of the pre-defined back-ends. We can set or unset extra_spec for a volume type. i.e:
 ```
