@@ -82,6 +82,10 @@ To create a volume type name, run:
 ```
 $ cinder type-create infinibox-cinder-pool
 ```
+Now, associate that new volume type with one of the pre-defined back-ends.
+```
+$ cinder type-key set infinibox-cinder-pool volume_backend_name=infinidat-openstack-cert
+```
 You should now be able to create a 2GB volume on your newly defined
 backend by invoking its volume type. To do this run:
 ```
