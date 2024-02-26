@@ -1,0 +1,118 @@
+# For the opnstack cinder general configuration refer to RedHat OpenStack Platform 16.2 Overcloud Parameters
+# For the driver configuration refer to Openstack Cinder Configuration For Infinidat Driver
+
+parameter_defaults:
+
+  # Disable all other types of cinder backends to deploy Infinidat iSCSI backend.
+  CinderEnableIscsiBackend: false
+  CinderEnableRbdBackend: false
+  CinderEnableNfsBackend: false
+  NovaEnableRbdBackend: false
+
+  # Specify defailt volume type for multibackend deployments
+  CinderDefaultVolumeType: infinidat-iscsi1
+
+  CinderRpcResponseTimeout: 180
+
+  # Enable and configure multipath
+  NovaLibvirtVolumeUseMultipath: true
+  MultipathdEnable: true
+  MultipathdCustomConfigFile: /var/lib/mistral/multipath.conf
+
+  # Extra backends configuration
+  ControllerExtraConfig:
+    cinder::config::cinder_config:
+
+
+      # Configure first backend
+
+      # Enable Infinibox cinder driver for it
+      infinidat-iscsi1/volume_driver:
+        value: cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+
+      # Specify the name for the backend.
+      infinidat-iscsi1/volume_backend_name:
+        value: infinidat-iscsi1
+
+      # Specify the address and credentials
+      infinidat-iscsi1/san_ip:
+        value: infinibox.domain.com
+      infinidat-iscsi1/san_login:
+        value: censored
+      infinidat-iscsi1/san_password:
+        value: censored
+
+      # Enable SSL support for the portal
+      infinidat-iscsi1/driver_use_ssl:
+        value: true
+      # Supress SSL warnings sent by the portal
+      infinidat-iscsi1/suppress_requests_ssl_warnings:
+        value: true
+
+      # Configure iscsi driver type specific options
+      infinidat-iscsi1/infinidat_pool_name:
+        value: rhsop_cinder_pool1
+      infinidat-iscsi1/infinidat_storage_protocol:
+        value: iscsi
+      infinidat-iscsi1/infinidat_iscsi_netspaces:
+        value: default_iscsi_space
+
+      # Enable thin provisionning feature
+      infinidat-iscsi1/san_thin_provision:
+        value: true
+
+      # Configure cinder specific options for the backend
+      infinidat-iscsi1/use_multipath_for_image_xfer:
+        value: true
+      infinidat-iscsi1/image_volume_cache_enabled:
+        value: false
+
+
+
+      # Configure second backend
+
+      # Enable Infinibox cinder driver for it
+      infinidat-iscsi2/volume_driver:
+        value: cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+
+      # Specify the name for the backend.
+      infinidat-iscsi2/volume_backend_name:
+        value: infinidat-iscsi2
+
+      # Specify the address and credentials
+      infinidat-iscsi2/san_ip:
+        value: infinibox.domain.com
+      infinidat-iscsi2/san_login:
+        value: censored
+      infinidat-iscsi2/san_password:
+        value: censored
+
+      # Enable SSL support for the portal
+      infinidat-iscsi2/driver_use_ssl:
+        value: true
+      # Supress SSL warnings sent by the portal
+      infinidat-iscsi2/suppress_requests_ssl_warnings:
+        value: true
+
+      # Configure iscsi driver type specific options
+      infinidat-iscsi2/infinidat_pool_name:
+        value: rhsop_cinder_pool2
+      infinidat-iscsi2/infinidat_storage_protocol:
+        value: iscsi
+      infinidat-iscsi2/infinidat_iscsi_netspaces:
+        value: default_iscsi_space
+
+      # Enable thin provisionning feature
+      infinidat-iscsi2/san_thin_provision:
+        value: true
+
+      # Configure cinder specific options for the backend
+      infinidat-iscsi2/use_multipath_for_image_xfer:
+        value: true
+      infinidat-iscsi2/image_volume_cache_enabled:
+        value: false
+
+    # Specify all the backends you want to enable
+    cinder_user_enabled_backends:
+    - infinidat-iscsi1
+    - infinidat-iscsi2

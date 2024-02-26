@@ -1,6 +1,6 @@
 ## Introduction
 
-This document describes the configuration process required to enable Infinibox
+This document describes the configuration process required to enable InfiniBox
 to be used as an iSCSI or Fibre Channel Cinder Block Storage backend in
 Red Hat OpenStack distributions.
 
@@ -9,12 +9,12 @@ Before using this document, please make sure:
 -  Your Red Hat OpenStack Platform Overcloud has been correctly
    deployed through the Undercloud Director
 
--  Your Infinibox should be available in the cloud management
-   network or routed to the cloud management network with the Infinibox iSCSI
-   ports correctly configured. On the Infinibox you must
+-  Your InfiniBox should be available in the cloud management
+   network or routed to the cloud management network with the InfiniBox iSCSI
+   ports correctly configured. On the InfiniBox you must
    also create a storage pool that will be used as the cinder backend
 
--  The Infinibox management IP (and iSCSI port IPs if applicable) must have
+-  The InfiniBox management IP (and iSCSI port IPs if applicable) must have
    connectivity from the controller and compute nodes
 
 When Red Hat OpenSstack Platform is deployed through the Director, all
@@ -22,7 +22,13 @@ major Overcloud settings must be defined and orchestrated through the
 Director as well. This will ensure that the settings persist through any
 Overcloud updates.
 
-## Configure Infinibox as a Cinder Backend
+## Red Hat OpenStack Platform Releases
+* [Red Hat OpenStack Platform 13](RHOSP13)
+* [Red Hat OpenStack Platform 15](RHOSP15)
+* [Red Hat OpenStack Platform 16](RHOSP16)
+* [Red Hat OpenStack Platform 17](RHOSP17)
+
+## Configure InfiniBox as a Cinder Backend
 
 Choose the correct subdirectory base on your Red Hat OpenStack Platform Overcloud's version.
 Copy the YAML file from subdirectory into the following locations in your Undercloud:
@@ -36,8 +42,8 @@ $ docker build . -t "openstack-cinder-volume-infinidat:latest"
 This newly created image can then be pushed to a registry that has been configured
 as the sources of images to be used by the RHOSP deployment.
 
-Red Hat Certified versions of these containers can also be used. These can be found
-in the Red Hat Container Catalog. See https://access.redhat.com/containers/#/search/infinidat
+Red Hat Certified versions of these containers can also be used.
+These can be found in the [Red Hat Ecosystem Catalog](https://catalog.redhat.com/software/search?p=1&vendor_name=infinidat|Infinidat%20Ltd.).
 
 Edit the overcloud container images environment file (usually
 `overcloud_images.yaml`, created when using the
@@ -45,7 +51,7 @@ Edit the overcloud container images environment file (usually
 appropriate parameter to use the custom container image.
 
 Edit `~/templates/cinder-infinidat-config.yaml` and populate it with your specific
-Infinibox data. Specifically, you must replace `infinidat-openstack-cert` with your infinibox's
+InfiniBox data. Specifically, you must replace `infinidat-openstack-cert` with your infinibox's
 customized data in the form of `infinibox-{pool name}`. For example if you pool name is `cinder-pool`,
 replace `infinidat-openstack-cert` with `infinibox-cinder-pool`.
 

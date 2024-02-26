@@ -1,0 +1,87 @@
+parameter_defaults:
+  # Disable all other types of Cinder backends
+  CinderEnableIscsiBackend: false
+  CinderEnableRbdBackend: false
+  CinderEnableNfsBackend: false
+  NovaEnableRbdBackend: false
+
+  # Specify defailt volume type for multibackend deployments
+  CinderDefaultVolumeType: infinidat-iscsi
+  CinderRpcResponseTimeout: 180
+
+  # Enable and configure multipath
+  NovaLibvirtVolumeUseMultipath: true
+  MultipathdEnable: true
+  MultipathdCustomConfigFile: /home/stack/multipath.conf
+
+  # Extra backends configuration
+  ControllerExtraConfig:
+    cinder::config::cinder_config:
+      # iSCSI backend
+      # InfiniBox cinder driver
+      infinidat-iscsi/volume_driver:
+        value: cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+      # Name for the backend.
+      infinidat-iscsi/volume_backend_name:
+        value: infinidat-iscsi
+      # Management address and credentials
+      infinidat-iscsi/san_ip:
+        value: infinibox
+      infinidat-iscsi/san_login:
+        value: user
+      infinidat-iscsi/san_password:
+        value: password
+      # Enable SSL support
+      infinidat-iscsi/driver_use_ssl:
+        value: true
+      # Supress SSL warnings
+      infinidat-iscsi/suppress_requests_ssl_warnings:
+        value: true
+      # Configure driver specific options
+      infinidat-iscsi/infinidat_pool_name:
+        value: iscsi-pool
+      infinidat-iscsi/infinidat_storage_protocol:
+        value: iscsi
+      infinidat-iscsi/infinidat_iscsi_netspaces:
+        value: network-space
+      # Enable thin provisionning
+      infinidat-iscsi/san_thin_provision:
+        value: true
+      # Attach volumes using multipath
+      infinidat-iscsi/use_multipath_for_image_xfer:
+        value: true
+      # FC backend
+      # InfiniBox cinder driver
+      infinidat-fc/volume_driver:
+        value: cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+      # Name for the backend.
+      infinidat-fc/volume_backend_name:
+        value: infinidat-fc
+      # Management address and credentials
+      infinidat-fc/san_ip:
+        value: infinibox
+      infinidat-fc/san_login:
+        value: user
+      infinidat-fc/san_password:
+        value: password
+      # Enable SSL support
+      infinidat-fc/driver_use_ssl:
+        value: true
+      # Supress SSL warnings
+      infinidat-fc/suppress_requests_ssl_warnings:
+        value: true
+      # Configure driver specific options
+      infinidat-fc/infinidat_pool_name:
+        value: fc-pool
+      infinidat-fc/infinidat_storage_protocol:
+        value: fc
+      # Enable thin provisionning
+      infinidat-fc/san_thin_provision:
+        value: true
+      # Attach volumes using multipath
+      infinidat-fc/use_multipath_for_image_xfer:
+        value: true
+    # Specify all the backends you want to enable
+    cinder_user_enabled_backends:
+    - infinidat-iscsi
+    - infinidat-fc

@@ -1,0 +1,20 @@
+parameter_defaults:
+  ContainerImagePrepare:
+  - push_destination: true
+    excludes:
+    - cinder-volume
+    set:
+      name_prefix: openstack-
+      name_suffix: ''
+      namespace: registry.redhat.io/rhosp-rhel8
+      rhel_containers: false
+      tag: '16.2'
+    tag_from_label: '{version}-{release}'
+  - push_destination: false
+    includes:
+    - cinder-volume
+    set:
+      namespace: registry.connect.redhat.com/infinidat
+      name_prefix: openstack-
+      name_suffix: -infinidat-plugin
+      tag: 'latest'
