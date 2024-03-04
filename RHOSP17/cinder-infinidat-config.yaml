@@ -1,18 +1,6 @@
 parameter_defaults:
-  # Disable all other types of Cinder backends
+  # Disable iSCSI Cinder backend
   CinderEnableIscsiBackend: false
-  CinderEnableRbdBackend: false
-  CinderEnableNfsBackend: false
-  NovaEnableRbdBackend: false
-
-  # Specify defailt volume type for multibackend deployments
-  CinderDefaultVolumeType: infinidat-iscsi
-  CinderRpcResponseTimeout: 180
-
-  # Enable and configure multipath
-  NovaLibvirtVolumeUseMultipath: true
-  MultipathdEnable: true
-  MultipathdCustomConfigFile: /home/stack/multipath.conf
 
   # Extra backends configuration
   ControllerExtraConfig:

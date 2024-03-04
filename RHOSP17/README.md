@@ -116,20 +116,8 @@ Create the environment file [`cinder-infinidat-config.yaml`](cinder-infinidat-co
 
 ```
 parameter_defaults:
-  # Disable all other types of Cinder backends
+  # Disable iSCSI Cinder backend
   CinderEnableIscsiBackend: false
-  CinderEnableRbdBackend: false
-  CinderEnableNfsBackend: false
-  NovaEnableRbdBackend: false
-
-  # Specify defailt volume type for multibackend deployments
-  CinderDefaultVolumeType: infinidat-iscsi
-  CinderRpcResponseTimeout: 180
-
-  # Enable and configure multipath
-  NovaLibvirtVolumeUseMultipath: true
-  MultipathdEnable: true
-  MultipathdCustomConfigFile: /home/stack/multipath.conf
 
   # Extra backends configuration
   ControllerExtraConfig:
@@ -246,52 +234,25 @@ openstack overcloud deploy --templates \
 
 3.1. Check the volume services status:
 ```
-(overcloud) [stack@rhosp-cert-director ~]$ openstack volume service list -c Binary -c Host -c Status
-+------------------+---------------------------+---------+
-| Binary           | Host                      | Status  |
-+------------------+---------------------------+---------+
-| cinder-scheduler | rhosp-cert-controller     | enabled |
-| cinder-backup    | rhosp-cert-controller     | enabled |
-| cinder-volume    | hostgroup@infinidat-iscsi | enabled |
-| cinder-volume    | hostgroup@infinidat-fc    | enabled |
-+------------------+---------------------------+---------+
+(overcloud) [stack@rhosp-director ~]$ openstack volume service list
++------------------+---------------------------+------+---------+-------+----------------------------+
+| Binary           | Host                      | Zone | Status  | State | Updated At                 |
++------------------+---------------------------+------+---------+-------+----------------------------+
+| cinder-scheduler | rhosp-controller          | nova | enabled | up    | 2024-03-04T09:16:25.000000 |
+| cinder-backup    | rhosp-controller          | nova | enabled | up    | 2024-03-04T09:16:29.000000 |
+| cinder-volume    | hostgroup@infinidat-fc    | nova | enabled | up    | 2024-03-04T09:16:29.000000 |
+| cinder-volume    | hostgroup@infinidat-iscsi | nova | enabled | up    | 2024-03-04T09:16:20.000000 |
++------------------+---------------------------+------+---------+-------+----------------------------+
 ```
 
-3.2. SSH to the controller node from the undercloud, and check the process for the `cinder-volume` container:
+3.2. Create a volume and check its status:
 ```
-[root@rhosp-cert-controller ~]# podman ps | grep cinder-volume
-7c326bc69b72 rhosp-cert-director.ctlplane.localdomain:8787/rhosp-rhel9/openstack-cinder-volume-infinidat-plugin-rhosp-17-1:17.1 36 hours ago Up 36 hours (healthy) openstack-cinder-volume-podman-0
-```
+(overcloud) [stack@rhosp-director ~]$ openstack volume create --size 1 test-volume
 
-3.3. Verify that the backend details are visible in `/etc/cinder/cinder.conf` in the `cinder-volume` container:
-
-```
-[root@rhosp-cert-controller ~]# podman exec -it openstack-cinder-volume-podman-0 cat /etc/cinder/cinder.conf
-...
-[infinidat-iscsi]
-driver_use_ssl=True
-infinidat_iscsi_netspaces=network-space
-infinidat_pool_name=iscsi-pool
-infinidat_storage_protocol=iscsi
-san_ip=infinibox
-san_login=user
-san_password=password
-san_thin_provision=True
-suppress_requests_ssl_warnings=True
-use_multipath_for_image_xfer=True
-volume_backend_name=infinidat-iscsi
-volume_driver=cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
-
-[infinidat-fc]
-driver_use_ssl=True
-infinidat_pool_name=fc-pool
-infinidat_storage_protocol=fc
-san_ip=infinibox
-san_login=user
-san_password=password
-san_thin_provision=True
-suppress_requests_ssl_warnings=True
-use_multipath_for_image_xfer=True
-volume_backend_name=infinidat-fc
-volume_driver=cinder.volume.drivers.infinidat.InfiniboxVolumeDriver
+(overcloud) [stack@rhosp-director ~]$ openstack volume list
++--------------------------------------+-------------+------------+------+-------------+
+| ID                                   | Name        | Status     | Size | Attached to |
++--------------------------------------+-------------+------------+------+-------------+
+| e36416c4-13ad-4ac6-beeb-fe823ff9ded8 | test-volume | available  |    1 |             |
++--------------------------------------+-------------+------------+------+-------------+
 ```
