@@ -27,6 +27,7 @@ Overcloud updates.
 * [Red Hat OpenStack Platform 15](RHOSP15)
 * [Red Hat OpenStack Platform 16](RHOSP16)
 * [Red Hat OpenStack Platform 17](RHOSP17)
+* [Red Hat OpenStack Services on OpenShift 18](RHOSO18)
 
 ## Configure InfiniBox as a Cinder Backend
 
